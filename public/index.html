@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wordle Clone</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="game-container">
+    <h1>Wordle Challenge</h1>
+    <div id="board">
+      <!-- Rows for guesses will be dynamically generated -->
+    </div>
+    <div id="status-bar">
+      <span id="timer">Time: 60s</span>
+      <span id="points">Points: 0</span>
+    </div>
+    <input id="guess-input" type="text" placeholder="Enter a word" />
+    <button id="submit-guess">Submit</button>
+    <p id="feedback"></p>
+  </div>
+  <script src="script.js"></script>
+  <script src="gamelogic.js"></script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  background-color: #f0f0f0;
+}
+
+#game-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 90%;
+  max-width: 400px;
+  margin: auto; /* Ensure centering in smaller screens */
+}
+
+#board {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* Will be dynamically updated via JS */
+  gap: 5px;
+  margin: 20px 0;
+}
+
+#board .tile {
+  width: 60px;
+  height: 60px;
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  line-height: 60px;
+  background-color: #fff;
+  border-radius: 10px;
+}
+
+#board .correct {
+  background-color: green;
+  color: white;
+  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.5);
+  z-index: 1; /* Bring the tile to the front */
+  position: relative; /* Ensure the z-index takes effect */
+}
+
+#board .present {
+  background-color: orange;
+  color: white;
+  box-shadow: 0 3px 3px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.1); /* Add drop shadow */
+
+}
+
+#board .absent {
+  background-color: gray;
+  color: white;
+}
+
+#guess-input {
+  width: 100%;
+  padding: 10px;
+  font-size: 18px;
+  margin-bottom: 10px;
+  text-align: center; /* Align text in the center */
+  box-sizing: border-box; /* Include padding in width calculation */
+}
+
+#submit-guess {
+  padding: 10px 20px;
+  font-size: 18px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  width: 100%; /* Make button consistent with input field */
+}
+
+#submit-guess:hover {
+  background-color: #0056b3;
+}
+
+#feedback {
+  margin-top: 10px;
+  font-size: 16px;
+  color: #555;
+}
