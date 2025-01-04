@@ -1,0 +1,88 @@
+/* Main scoreboard container */
+#scoreboard-container {
+    display: flex;
+    flex-direction: column; /* Stack the table and button vertically */
+    height: 100vh; /* Full height of the viewport */
+    max-width: 100%; /* Ensure it fits within the screen */
+    margin: 0 auto;
+    overflow: hidden; /* Prevent scrolling outside the container */
+  }
+  
+  /* Scrollable container for the table */
+  #scoreboard-wrapper {
+    flex: 1; /* Allow the wrapper to take all available space above the share button */
+    overflow-y: auto; /* Enable vertical scrolling for the table rows */
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Style the table */
+  #scoreboard {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed; /* Ensures columns stay consistent in width */
+  }
+  
+  /* Sticky header styles */
+  #scoreboard thead {
+    position: sticky;
+    top: 0; /* Stick to the top of the table's container */
+    z-index: 2; /* Ensure it stays above other rows */
+    background-color: #3b82f6; /* Keep the background for visibility */
+    color: #ffffff; /* Contrast text color */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add subtle shadow for better appearance */
+  }
+  
+  /* Table Row Styling */
+  #scoreboard th, #scoreboard td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #e5e7eb;
+  }
+  
+  #scoreboard tbody tr:nth-child(even) {
+    background-color: #f9fafb;
+  }
+  
+  #scoreboard tbody tr:nth-child(odd) {
+    background-color: #ffffff;
+  }
+  
+  #scoreboard tbody tr:hover {
+    background-color: #e0f2fe;
+  }
+  
+  /* Highlighted Row */
+  .highlight {
+    background-color: yellow; /* Highlight color */
+    font-weight: bold;
+    position: sticky; /* Make it sticky */
+    top: 40px; /* Stick below the header */
+    z-index: 1; /* Ensure it stays above other rows */
+  }
+  
+  /* Share Button */
+  #share-button-container {
+    background-color: #f0f0f0; /* Match the background for consistency */
+    padding: 10px;
+    text-align: center;
+    position: sticky; /* Keep the share button visible */
+    bottom: 0;
+    z-index: 3; /* Ensure it's above other elements */
+    width: 100%;
+  }
+  
+  #share-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  #share-button:hover {
+    background-color: #0056b3;
+  }
+  

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scoreboard</title>
+  <link rel="stylesheet" href="scoreboard.css"> <!-- Link to the new scoreboard styles -->
+</head>
+<body>
+  <div id="scoreboard-container">
+    <h1>Scoreboard</h1>
+    <div id="scoreboard-wrapper">
+      <table id="scoreboard">
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Score</th>
+            <th>Difficulty</th>
+            <th>Word</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Rows dynamically generated -->
+        </tbody>
+      </table>
+    </div>
+    <div id="share-button-container">
+      <button id="share-button">Share</button>
+    </div>
+  </div>
+  
+  
+
+  <!-- Include the game logic -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="scoreboard.js"></script>
+  <script src="supabase-init.js"></script>
+</body>
+</html>

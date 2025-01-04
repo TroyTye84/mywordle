@@ -1,23 +1,26 @@
 const timerDisplay = document.getElementById("timer");
 const pointsDisplay = document.getElementById("points");
 let timerInterval = null;
-let timeLeft = 60; // Initial time in seconds
+let elapsedTime = 0; // Start with 0 seconds
 let points = 100; // Start with 100 points
 
 // Start the timer
 function startTimer() {
-  timerDisplay.textContent = `Time: ${timeLeft}s`;
+  elapsedTime = 0; // Reset the elapsed time for each game
+  timerDisplay.textContent = `Time: ${elapsedTime}s`;
   timerInterval = setInterval(() => {
-    timeLeft--;
-    timerDisplay.textContent = `Time: ${timeLeft}s`;
+    elapsedTime++; // Increment elapsed time
+    timerDisplay.textContent = `Time: ${elapsedTime}s`;
 
-    // Deduct points for time taken
+    // Deduct points as time increases
     subtractPoints(1);
 
     // Ensure points don't go below 0
     if (points <= 0) {
       points = 0;
       pointsDisplay.textContent = `Points: ${points}`;
+      stopTimer(); // Stop the timer if points reach 0
+      endGame(false); // End the game as a loss
     }
   }, 1000);
 }
@@ -25,12 +28,6 @@ function startTimer() {
 // Stop the timer
 function stopTimer() {
   clearInterval(timerInterval);
-}
-
-// Add time to the timer
-function addTime(seconds) {
-  timeLeft += seconds;
-  timerDisplay.textContent = `Time: ${timeLeft}s`;
 }
 
 // Add points to the player's score
@@ -54,9 +51,9 @@ function endGame(win) {
   const submitButton = document.getElementById("submit-guess");
 
   if (win) {
-    feedback.textContent = `Congratulations! You guessed the word and earned ${points} points!`;
+    feedback.textContent = `Congratulations! You guessed the word in ${elapsedTime} seconds and earned ${points} points!`;
   } else {
-    feedback.textContent = `Time's up! Final score: ${points} points.`;
+    feedback.textContent = `Game over! Final score: ${points} points.`;
   }
 
   input.disabled = true;
@@ -65,9 +62,9 @@ function endGame(win) {
 
 // Initialize the game
 function initializeGame(wordLength) {
-  timeLeft = 60; // Reset timer for each game
-  points = 100; // Start with 100 points
-  timerDisplay.textContent = `Time: ${timeLeft}s`;
+  elapsedTime = 0; // Reset the timer for each game
+  points = 100; // Reset points for each game
+  timerDisplay.textContent = `Time: ${elapsedTime}s`;
   pointsDisplay.textContent = `Points: ${points}`;
   startTimer();
 }

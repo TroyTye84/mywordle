@@ -2,25 +2,33 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Wordle Clone</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <!-- Top bar with timer, points, and difficulty -->
+  <div id="status-bar">
+    <span id="timer">60s</span>
+    <span id="points">0</span>
+    <span id="difficulty">Difficulty: Medium</span>
+  </div>
+  <div id="title-container">
+    <img src="img/WordleChallenge.png" alt="Wordle Challenge" id="title-image">
+  </div>
   <div id="game-container">
-    <h1>Wordle Challenge</h1>
     <div id="board">
       <!-- Rows for guesses will be dynamically generated -->
     </div>
-    <div id="status-bar">
-      <span id="timer">Time: 60s</span>
-      <span id="points">Points: 0</span>
+    <div id="virtual-keyboard-container">
+      <div id="virtual-keyboard">
+      </div>
+      <button id="submit-guess">Submit</button>
     </div>
-    <input id="guess-input" type="text" placeholder="Enter a word" />
-    <button id="submit-guess">Submit</button>
-    <p id="feedback"></p>
-  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <script src="script.js"></script>
-  <script src="gamelogic.js"></script>
+  <script src="scoreboard.js"></script>
+  <script src="ui-components.js"></script>
 </body>
 </html>
