@@ -4,6 +4,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const { createClient } = require("@supabase/supabase-js");
 const { generateWord } = require("./openai.js"); // Your word generation logic
+const fs = require("fs");
 
 dotenv.config();
 
@@ -27,7 +28,16 @@ if (!SUPABASE_URL || !SUPABASE_KEY) {
 
 // Initialize Supabase client
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+// Load the dictionary into a Set
+const loadDictionary = (filePath) => {
+  const fileContent = fs.readFileSync(filePath, "utf-8");
+  return new Set(fileContent.split("\n").map(word => word.trim().toLowerCase()));
+};
 
+const dictionaryPath = path.join(__dirname, "data", "words.txt");
+const dictionary = loadDictionary(dictionaryPath);
+
+console.log(`Loaded dictionary with ${dictionary.size} words.`);
 // Endpoint to retrieve the daily word
 app.get("/daily-word", async (req, res) => {
   if (!dailyWord) {
@@ -76,6 +86,17 @@ app.get("/supabase-config", (req, res) => {
   }
 
   res.json({ SUPABASE_URL, SUPABASE_KEY });
+});
+// Endpoint to validate a word against the dictionary
+app.get("/validate-word", (req, res) => {
+  const { word } = req.query;
+
+  if (!word) {
+    return res.status(400).json({ error: "Word is required." });
+  }
+
+  const isValid = dictionary.has(word.toLowerCase());
+  res.json({ valid: isValid });
 });
 
 // Endpoint to fetch the scoreboard

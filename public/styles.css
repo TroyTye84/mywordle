@@ -2,18 +2,15 @@
 
 
 body {
-  font-family: 'Inter', Arial, sans-serif; /* Apply Inter font globally */
+  font-family: 'Inter', Arial, sans-serif;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
   margin: 0;
-  background-image: url('img/SnowBackground.png'); /* Path to your image */
-  background-size: cover; /* Ensure the image covers the entire background */
-  background-repeat: no-repeat; /* Prevent tiling */
-  background-position: center; /* Center the image */
   touch-action: manipulation;
   overflow: hidden; /* Prevent scrolling in the body */
+  transition: background-color 0.5s ease-in-out; /* Smooth transition for color changes */
 }
 
 #game-container {
@@ -120,11 +117,12 @@ body {
   margin-top: 10px; /* Space above the button */
   padding: 10px 20px;
   font-size: 18px;
-  background-color: #007bff;
+  font-weight: normal; /* Ensure the text is not bold */
+  background-color: #4b5efc;
   color: white;
   border: none;
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 15px;
   width: 90%; /* Stretch button width */
   max-width: 400px; /* Prevent it from growing too large */
   box-sizing: border-box; /* Include padding in dimensions */
@@ -221,7 +219,7 @@ body {
   font-size: calc(2vw + 10px); /* Dynamically scale font size */
   font-weight: bold;
   border: none;
-  border-radius: 5px;
+  border-radius: 10px;
   cursor: pointer;
   text-transform: uppercase;
   flex: 1; /* Dynamically size all buttons equally within the row */
@@ -236,16 +234,14 @@ body {
   white-space: nowrap; /* Prevent text wrapping */
   font-family: 'Inter', Arial, sans-serif; /* Ensure the correct font is used */
   font-weight: 600; /* Semi-bold for keyboard buttons */
+  background-color: white;
   -webkit-backdrop-filter: blur(30px); /* iOS Safari support */
-  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2); /* Subtle drop shadow */
-
-
 }
 
 
 #virtual-keyboard button:hover {
   background-color: #e0e0e0;
-  border-radius: 5px; /* Rounded corners */
+  border-radius: 10px; /* Rounded corners */
 
 }
 
@@ -323,4 +319,27 @@ button {
   max-width: 300px; /* Restrict the maximum width of the image */
   width: auto; /* Maintain the aspect ratio */
   height: 40px; /* Ensure the image scales properly */
+}
+.feedback-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent background */
+  color: white;
+  font-size: 1.2rem;
+  padding: 10px 20px;
+  border-radius: 8px;
+  z-index: 1000; /* Ensure it appears above everything */
+  text-align: center;
+  animation: fadeOut 1s ease-in-out forwards;
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }

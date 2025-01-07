@@ -94,14 +94,96 @@ function startTimer() {
   // Store the timerInterval for clearing later if needed
   window.timerInterval = timerInterval;
 }
+
+document.addEventListener("keydown", (event) => {
+  const key = event.key;
+
+  // Allow only alphabetical characters
+  if (key.length === 1 && /^[a-zA-Z]$/.test(key)) {
+    // Prevent input if currentTileIndex exceeds the board size or current row's boundary
+    if (currentTileIndex >= maxTiles || currentTileIndex >= currentRowStart + wordLength) {
+      console.log("Cannot add more letters. Row is full or board limit reached.");
+      return;
+    }
+
+    // Add the letter to the tile
+    const tile = board.children[currentTileIndex];
+    if (tile) {
+      tile.textContent = key.toUpperCase(); // Add the letter
+      currentTileIndex++; // Move to the next tile
+    }
+  }
+
+  // Handle backspace
+  if (key === "Backspace" && currentTileIndex > currentRowStart) {
+    currentTileIndex--; // Move back one tile
+    const tile = board.children[currentTileIndex];
+    if (tile) {
+      tile.textContent = ""; // Clear the letter
+    }
+  }
+});
+function showFeedbackMessage(message) {
+  // Create a temporary feedback element
+  const feedbackPopup = document.createElement("div");
+  feedbackPopup.textContent = message;
+  feedbackPopup.classList.add("feedback-popup");
+
+  // Add the feedback element to the body
+  document.body.appendChild(feedbackPopup);
+
+  // Remove the feedback element after 1 second
+  setTimeout(() => {
+    feedbackPopup.remove();
+  }, 5000);
+}
 // Check the user's guess
-function checkGuess(guess) {
+async function checkGuess(guess) {
   if (guess.length !== wordLength) {
     feedback.textContent = `Please enter a ${wordLength}-letter word.`;
     return;
   }
 
+  // Print the current row's letters and tile numbers
   const tiles = Array.from(board.children);
+  const currentRowTiles = tiles.slice(currentRowStart, currentRowStart + wordLength);
+  const currentRowLetters = currentRowTiles.map((tile, index) => {
+    const tileIndex = currentRowStart + index; // Calculate the absolute tile index
+    console.log(`Tile ${tileIndex}: ${tile.textContent || " "}`); // Log tile index and content
+    return tile.textContent || " ";
+  });
+
+  console.log("Current Row Letters:", currentRowLetters.join(""));
+
+  // Validate the guess by calling the server
+  const response = await fetch(`/validate-word?word=${encodeURIComponent(guess)}`);
+  const { valid } = await response.json();
+
+  if (!valid) {
+    showFeedbackMessage(`"${guess}" is not a valid word. Please try again!`);
+  
+    const correctRowStart = Math.floor((currentTileIndex - 1) / wordLength) * wordLength;
+  
+    // Clear the characters in the correct row
+    for (let i = correctRowStart; i < correctRowStart + wordLength; i++) {
+      const tile = tiles[i];
+      tile.textContent = ""; // Clear letter
+      tile.classList.remove("correct", "present", "absent"); // Remove styles
+      tile.style.backgroundColor = ""; // Reset visual styles
+      tile.style.borderColor = "";
+    }
+  
+    // Reset tile index, row start, and row end
+    currentTileIndex = correctRowStart;
+    currentRowStart = correctRowStart;
+    currentRowEnd = correctRowStart + wordLength; // Correct row end (inclusive)
+    console.log("Tile index reset to:", currentTileIndex);
+    console.log("Row start reset to:", currentRowStart);
+    console.log("Row end reset to:", currentRowEnd);
+  
+    return;
+  }
+  const previousRowStart = currentRowStart - wordLength; // Starting index of the previous row
   const letterCount = {}; // Track occurrences of letters in the daily word
   let guessPoints = 0;
 
@@ -113,7 +195,7 @@ function checkGuess(guess) {
   // First pass: Check for correct positions
   const exactMatches = new Array(wordLength).fill(false); // Track exact matches
   for (let i = 0; i < wordLength; i++) {
-    const tile = tiles[currentRowStart + i];
+    const tile = tiles[previousRowStart + i]; // Target tiles from the previous row
     const keyButton = document.getElementById(`key-${guess[i]}`);
 
     if (guess[i] === dailyWord[i]) {
@@ -127,13 +209,11 @@ function checkGuess(guess) {
 
   // Second pass: Check for correct letters in the wrong position
   for (let i = 0; i < wordLength; i++) {
-    const tile = tiles[currentRowStart + i];
+    const tile = tiles[previousRowStart + i]; // Target tiles from the previous row
     const keyButton = document.getElementById(`key-${guess[i]}`);
 
     // Skip already correctly matched letters
-    if (exactMatches[i]) {
-      continue;
-    }
+    if (exactMatches[i]) continue;
 
     // Check for correct letter in the wrong position
     if (dailyWord.includes(guess[i]) && letterCount[guess[i]] > 0) {

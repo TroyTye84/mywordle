@@ -1,3 +1,4 @@
+const dictionary = require("./dictionary"); // Import the shared dictionary
 const OpenAI = require("openai");
 const dotenv = require("dotenv");
 const { createClient } = require("@supabase/supabase-js"); // Import Supabase
@@ -33,34 +34,43 @@ async function generateWord() {
     // Create a list of words to exclude
     const usedWordsList = usedWords.map((row) => row.word).join(", ");
 
-    // Dynamic content to be sent to the AI
-    const content = `You are an assistant for a Wordle game. Generate a unique word of random length that has not been used before. Avoid the following words: ${usedWordsList}. The word must exist in the Oxford Dictionary. Always respond with a single word wrapped in square brackets, followed by its difficulty in curly brackets. Example: [example]{medium}`;
+    while (true) {
+      // Dynamic content to be sent to the AI
+      const content = `You are an assistant for a Wordle game. Generate a unique word of random length that has not been used before. Avoid the following words: ${usedWordsList}. The word must exist in the Oxford Dictionary. Always respond with a single word wrapped in square brackets, followed by its difficulty in curly brackets. Example: [example]{medium}`;
 
-    // Print the content
-    console.log("Dynamic content for OpenAI:", content);
+      // Print the content
+      console.log("Dynamic content for OpenAI:", content);
 
-    // Send the used words to the AI
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        { role: "system", content },
-        { role: "user", content: "Generate a new word." },
-      ],
-    });
+      // Send the used words to the AI
+      const completion = await openai.chat.completions.create({
+        model: "gpt-4o-mini",
+        messages: [
+          { role: "system", content },
+          { role: "user", content: "Generate a new word." },
+        ],
+      });
 
-    const rawResponse = completion.choices[0].message.content.trim();
-    const wordMatch = rawResponse.match(/\[([a-zA-Z]+)\]/);
-    const difficultyMatch = rawResponse.match(/\{(easy|medium|hard)\}/);
+      const rawResponse = completion.choices[0].message.content.trim();
+      const wordMatch = rawResponse.match(/\[([a-zA-Z]+)\]/);
+      const difficultyMatch = rawResponse.match(/\{(easy|medium|hard)\}/);
 
-    if (!wordMatch || !difficultyMatch) {
-      throw new Error(`Invalid response format: ${rawResponse}`);
+      if (!wordMatch || !difficultyMatch) {
+        console.error(`Invalid response format: ${rawResponse}`);
+        continue; // Ask for another word if the format is invalid
+      }
+
+      const word = wordMatch[1].toLowerCase();
+      const difficulty = difficultyMatch[1].toLowerCase();
+
+      // Validate the word against the dictionary
+      if (!dictionary.has(word)) {
+        console.log(`Generated word "${word}" not in dictionary. Asking AI for another word.`);
+        continue; // Ask for another word if it's not in the dictionary
+      }
+
+      console.log("Generated daily word and difficulty:", { word, difficulty });
+      return { word, difficulty };
     }
-
-    const word = wordMatch[1].toLowerCase();
-    const difficulty = difficultyMatch[1].toLowerCase();
-
-    console.log("Generated daily word and difficulty:", { word, difficulty });
-    return { word, difficulty };
   } catch (error) {
     console.error("Error generating word:", error.message);
     throw error;

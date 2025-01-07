@@ -1,3 +1,29 @@
+function updateBackgroundColor() {
+  const now = new Date();
+  const hour = now.getHours(); // Get the current hour (0-23)
+
+  let backgroundColor;
+
+  if (hour >= 6 && hour < 12) {
+    backgroundColor = "#f1f2f3"; // Morning: Light yellow
+  } else if (hour >= 12 && hour < 14) {
+    backgroundColor = "#f1f2f3"; // Afternoon: Light blue
+  } else if (hour >= 15 && hour < 21) {
+    backgroundColor = "#f1f2f3"; // Evening: Golden yellow
+  } else {
+    backgroundColor = "#2C3E50"; // Night: Dark blue-gray
+  }
+
+  document.body.style.backgroundColor = backgroundColor;
+}
+
+// Call the function initially
+updateBackgroundColor();
+
+// Optional: Update the background color every hour
+setInterval(updateBackgroundColor, 3600000); // 3600000ms = 1 hour
+
+
 function createVirtualKeyboard() {
     const keyboardContainer = document.getElementById("virtual-keyboard");
     const keys = [
@@ -66,11 +92,11 @@ function createVirtualKeyboard() {
       .join("")
       .toLowerCase();
   
-    if (guess.length !== wordLength) {
-      feedback.textContent = `Please complete the row with ${wordLength} letters before submitting.`;
-      return;
-    }
-  
+      // Check if the guess has the correct length
+  if (guess.length !== wordLength) {
+    showFeedbackMessage(`Please complete the row with ${wordLength} letters before submitting.`);
+    return;
+  }
     checkGuess(guess);
   
     // Move to the next row
