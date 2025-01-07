@@ -35,12 +35,31 @@ app.get("/daily-word", async (req, res) => {
   }
 
   try {
-    const { error } = await supabase
+    // Check if the word already exists in the database
+    const { data: existingWord, error: fetchError } = await supabase
       .from("used_words")
-      .insert([{ word: dailyWord.word }]);
+      .select("word")
+      .eq("word", dailyWord.word)
+      .single();
 
-    if (error) {
-      console.error("Error saving used word:", error.message);
+    if (fetchError && fetchError.code !== "PGRST116") {
+      // If the error is not a "No rows" error, log it
+      console.error("Error checking for existing word:", fetchError.message);
+      throw fetchError;
+    }
+
+    if (!existingWord) {
+      // Only insert the word if it doesn't already exist
+      const { error: insertError } = await supabase
+        .from("used_words")
+        .insert([{ word: dailyWord.word }]);
+
+      if (insertError) {
+        console.error("Error saving used word:", insertError.message);
+        throw insertError;
+      }
+    } else {
+      console.log(`Word "${dailyWord.word}" already exists in the database.`);
     }
 
     res.json(dailyWord);

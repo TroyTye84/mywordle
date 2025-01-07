@@ -111,6 +111,7 @@ function checkGuess(guess) {
   }
 
   // First pass: Check for correct positions
+  const exactMatches = new Array(wordLength).fill(false); // Track exact matches
   for (let i = 0; i < wordLength; i++) {
     const tile = tiles[currentRowStart + i];
     const keyButton = document.getElementById(`key-${guess[i]}`);
@@ -120,6 +121,7 @@ function checkGuess(guess) {
       if (keyButton) keyButton.classList.add("correct");
       guessPoints += 5; // Add 5 points for correct position
       letterCount[guess[i]]--; // Decrement count for matched letter
+      exactMatches[i] = true; // Mark exact match
     }
   }
 
@@ -128,14 +130,21 @@ function checkGuess(guess) {
     const tile = tiles[currentRowStart + i];
     const keyButton = document.getElementById(`key-${guess[i]}`);
 
-    if (guess[i] !== dailyWord[i] && dailyWord.includes(guess[i]) && letterCount[guess[i]] > 0) {
+    // Skip already correctly matched letters
+    if (exactMatches[i]) {
+      continue;
+    }
+
+    // Check for correct letter in the wrong position
+    if (dailyWord.includes(guess[i]) && letterCount[guess[i]] > 0) {
       tile.classList.add("present");
       if (keyButton && !keyButton.classList.contains("correct")) {
         keyButton.classList.add("present");
       }
       guessPoints += 2; // Add 2 points for correct letter in wrong position
       letterCount[guess[i]]--; // Decrement count for matched letter
-    } else if (!dailyWord.includes(guess[i])) {
+    } else {
+      // Mark as absent if not in the daily word
       tile.classList.add("absent");
       if (keyButton) keyButton.classList.add("absent");
     }
@@ -153,7 +162,6 @@ function checkGuess(guess) {
     endGame(false); // Lose the game
   }
 }
-
 // Show the popup to save the score
 function showNamePopup() {
   const popup = document.createElement("div");

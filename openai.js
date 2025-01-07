@@ -33,14 +33,17 @@ async function generateWord() {
     // Create a list of words to exclude
     const usedWordsList = usedWords.map((row) => row.word).join(", ");
 
+    // Dynamic content to be sent to the AI
+    const content = `You are an assistant for a Wordle game. Generate a unique word of random length that has not been used before. Avoid the following words: ${usedWordsList}. The word must exist in the Oxford Dictionary. Always respond with a single word wrapped in square brackets, followed by its difficulty in curly brackets. Example: [example]{medium}`;
+
+    // Print the content
+    console.log("Dynamic content for OpenAI:", content);
+
     // Send the used words to the AI
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
-        {
-          role: "system",
-          content: `You are an assistant for a Wordle game. Generate a unique word of random length that has not been used before. Avoid the following words: ${usedWordsList}. The word must exist in the Oxford Dictionary. Always respond with a single word wrapped in square brackets, followed by its difficulty in curly brackets. Example: [example]{medium}`,
-        },
+        { role: "system", content },
         { role: "user", content: "Generate a new word." },
       ],
     });

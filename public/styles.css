@@ -22,7 +22,7 @@ body {
   justify-content: center; /* Center the content vertically */
   align-items: center;
   width: 100%;
-  position: absolute;
+  position: relative; /* Remove absolute positioning */
 }
 
 
@@ -36,9 +36,6 @@ body {
   box-sizing: border-box;
   font-size: 16px;
   font-weight: bold;
-  position: fixed;
-  top: 0;
-  left: 0;
   z-index: 1000;
   backdrop-filter: blur(10px); /* Apply blur effect */
   -webkit-backdrop-filter: blur(10px); /* iOS Safari support */
@@ -186,7 +183,12 @@ body {
   margin: 5px;
   cursor: pointer;
 }
-
+#wordle-app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Use the full height of the viewport */
+  width: 100%;;
+}
 #virtual-keyboard-container {
   position: fixed;
   bottom: 0;
@@ -306,21 +308,19 @@ button {
   text-transform: uppercase; /* Make text uppercase */
 }
 #title-container {
-  position: fixed;
-  top: 40px; /* Adjust based on the height of the top bar */
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 999; /* Ensure it stays on top of other elements */
-  width: 100%; /* Make it responsive */
-  text-align: center; /* Center the image horizontally */
-  background-color: rgba(255, 255, 255, 0.9); /* Optional background for contrast */
-  padding: 10px 0; /* Add vertical padding */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  height: 50px;
+  display: flex;
+  justify-content: center; /* Center the title content */
+  align-items: center; /* Vertically center the content */
+  width: 100%;
+  padding: 10px 0;
+  z-index: 998; /* Keep it below the status bar */
+  height: 50px; /* Fixed height for consistent layout */
+  text-align: center;
+  box-sizing: border-box;
 }
 
 #title-image {
   max-width: 300px; /* Restrict the maximum width of the image */
   width: auto; /* Maintain the aspect ratio */
-  height: auto; /* Ensure the image scales properly */
+  height: 40px; /* Ensure the image scales properly */
 }

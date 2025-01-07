@@ -8,24 +8,27 @@
 </head>
 <body>
   <!-- Top bar with timer, points, and difficulty -->
-  <div id="status-bar">
-    <span id="timer">60s</span>
-    <span id="points">0</span>
-    <span id="difficulty">Difficulty: Medium</span>
-  </div>
-  <div id="title-container">
-    <img src="img/WordleChallenge.png" alt="Wordle Challenge" id="title-image">
-  </div>
-  <div id="game-container">
-    <div id="board">
-      <!-- Rows for guesses will be dynamically generated -->
+  <div id="wordle-app">
+    <div id="status-bar">
+      <span id="timer">60s</span>
+      <span id="points">0</span>
+      <span id="difficulty">Difficulty: Medium</span>
     </div>
+    <div id="title-container">
+      <img src="img/wordle_logo.svg" alt="Wordle Challenge" id="title-image">
+    </div>
+    
+    <div id="game-container">
+      <div id="board">
+      </div>
+    </div>
+    
     <div id="virtual-keyboard-container">
       <div id="virtual-keyboard">
       </div>
       <button id="submit-guess">Submit</button>
     </div>
-
+  </div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <script src="script.js"></script>
   <script src="scoreboard.js"></script>
