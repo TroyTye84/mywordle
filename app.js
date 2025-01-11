@@ -165,9 +165,33 @@ function scheduleDailyWord() {
     0
   );
   const delay = nextMidnight - now;
+
+  // Function to calculate and print remaining time
+  const printRemainingTime = () => {
+    const remaining = nextMidnight - new Date();
+    if (remaining > 0) {
+      const hours = Math.floor(remaining / (1000 * 60 * 60));
+      const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+      console.log(`Time until next word: ${hours}h ${minutes}m`);
+    }
+  };
+
+  // Print the initial time remaining
+  printRemainingTime();
+
+  // Set up hourly interval to print remaining time
+  const hourlyInterval = setInterval(() => {
+    const remaining = nextMidnight - new Date();
+    if (remaining <= 0) {
+      clearInterval(hourlyInterval); // Stop the interval once the next word is due
+    } else {
+      printRemainingTime();
+    }
+  }, 1000 * 60 * 60); // Update every hour
+
+  // Schedule the next word generation at midnight
   setTimeout(scheduleDailyWord, delay);
 }
-
 // Start the word generation process
 scheduleDailyWord();
 

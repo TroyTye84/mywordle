@@ -1,31 +1,5 @@
 const scoreboardTable = document.getElementById("scoreboard").querySelector("tbody");
-async function loadSupabaseConfig() {
-  try {
-    const response = await fetch("/supabase-config");
-    if (!response.ok) {
-      throw new Error("Failed to fetch Supabase configuration.");
-    }
 
-    const { SUPABASE_URL, SUPABASE_KEY } = await response.json();
-    console.log("Supabase configuration received:", { SUPABASE_URL, SUPABASE_KEY });
-
-    // Create and return the Supabase client
-    return window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-  } catch (error) {
-    console.error("Error loading Supabase configuration:", error.message);
-    alert("Failed to load Supabase configuration. Please try again later.");
-    return null;
-  }
-}
-
-// Initialize Supabase client
-let supabase;
-(async () => {
-  supabase = await loadSupabaseConfig();
-  if (supabase) {
-    console.log("Supabase initialized successfully");
-  }
-})();
 // Fetch and display scoreboard data
 async function fetchScoreboard() {
   try {
@@ -44,12 +18,23 @@ async function fetchScoreboard() {
 // Display scoreboard data
 function displayScoreboard(scores) {
   const scoreboardTable = document.getElementById("scoreboard").querySelector("tbody");
+  const scoreboardWrapper = document.getElementById("scoreboard-wrapper"); // Scrollable container
   scoreboardTable.innerHTML = ""; // Clear existing rows
+
+  // Sort scores by the word column alphabetically
+  scores.sort((a, b) => {
+    const wordA = (a.word || "").toLowerCase();
+    const wordB = (b.word || "").toLowerCase();
+    return wordA.localeCompare(wordB); // Sort alphabetically
+  });
 
   // Extract the ID to highlight from the query string
   const urlParams = new URLSearchParams(window.location.search);
   const highlightedId = parseInt(urlParams.get("id")); // Get ID from query string
 
+  let highlightedRow = null;
+
+  // Populate the table
   scores.forEach((entry) => {
     const row = document.createElement("tr");
     row.innerHTML = `
@@ -62,47 +47,57 @@ function displayScoreboard(scores) {
     // Highlight the row if the ID matches
     if (entry.id === highlightedId) {
       row.classList.add("highlight"); // Add highlight class to the row
+      highlightedRow = row; // Keep reference to the highlighted row
     }
 
     scoreboardTable.appendChild(row);
   });
-}
 
+  // Scroll to the highlighted row
+  if (highlightedRow) {
+    setTimeout(() => {
+      const rowOffsetTop = highlightedRow.offsetTop;
+
+      console.log("Highlighted Row Found:", highlightedRow);
+      console.log("Row Offset Top:", rowOffsetTop);
+
+      // Adjust scroll position of the wrapper
+      scoreboardWrapper.scrollTop = rowOffsetTop;
+    }, 0);
+  }
+}
 // Initialize scoreboard
 fetchScoreboard();
 // Function to handle the Share button click
-function addShareButton(score) {
+function addShareButton() {
   const shareButton = document.getElementById("share-button");
-  const currentUrl = window.location.href.split("?")[0]; // Get the current page URL without query params
-  const message = `Can you beat me? I scored ${score}! Play here: ${currentUrl}`;
+  const previousPageUrl = document.referrer || "index.html"; // Use referrer or default to index
+
+  // Extract the score from the query parameters
+  const urlParams = new URLSearchParams(window.location.search);
+  const score = urlParams.get("score") || "N/A"; // Default to "N/A" if no score is provided
+
+  const message = `Can you beat me at Wordle? I SCORED ${score} ⭐️!`;
+  const shareData = {
+    title: "Can you beat me at Wordle?",
+    text: message,
+    url: previousPageUrl,
+  };
 
   shareButton.addEventListener("click", async () => {
     if (navigator.share) {
-      // Use Web Share API if supported
       try {
-        await navigator.share({
-          title: "Challenge your friends!",
-          text: message,
-          url: currentUrl,
-        });
+        await navigator.share(shareData);
         alert("Challenge shared successfully!");
       } catch (error) {
-        console.error("Error sharing:", error);
-        alert("Could not share the challenge.");
+        console.error("Error sharing via Web Share API:", error);
+        alert("Sharing failed. Please try again.");
       }
     } else {
-      // Fallback: Copy to clipboard
-      try {
-        await navigator.clipboard.writeText(message);
-        alert("Message copied to clipboard. Share it with your friends!");
-      } catch (error) {
-        console.error("Error copying to clipboard:", error);
-        alert("Could not copy the message to clipboard.");
-      }
+      alert("Sharing is not supported on this device.");
     }
   });
 }
 
-// Example usage: Pass the score to the addShareButton function
-const playerScore = 70; // Replace with the actual score
-addShareButton(playerScore);
+// Call the function after the page loads
+addShareButton();
