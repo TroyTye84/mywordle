@@ -2,25 +2,125 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Wordle Clone</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, orientation=portrait">
+  <meta name="theme-color" content="#f1f2f3">
+  <meta property="og:image" content="/img/wordle_logo.svg" />
+  <title>Wordle Challenge</title>
   <link rel="stylesheet" href="styles.css">
+    <!-- Standard favicon -->
+  <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
+  
+  <!-- PNG favicons -->
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
+  
+  <!-- Apple Touch Icon -->
+  <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+  
+  <!-- Android Chrome Icons -->
+  <link rel="icon" type="image/png" sizes="192x192" href="/img/android-chrome-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="/img/android-chrome-512x512.png">
 </head>
 <body>
-  <div id="game-container">
-    <h1>Wordle Challenge</h1>
-    <div id="board">
-      <!-- Rows for guesses will be dynamically generated -->
-    </div>
+  <div id="feedback"></div>
+  <div id="wordle-app">
     <div id="status-bar">
-      <span id="timer">Time: 60s</span>
-      <span id="points">Points: 0</span>
+      <div id="time-section">
+        <div id="time-icon-container">
+          <svg
+            id="time-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 512 512"
+            style="enable-background:new 0 0 512 512;"
+            xml:space="preserve"
+          >
+            <style type="text/css">
+              .timeicon {
+                fill: #212121; /* Default color */
+              }
+            </style>
+            <path
+              class="timeicon"
+              d="M256.6,9.8C120.3,9.8,9.8,120.3,9.8,256.6s110.5,246.7,246.8,246.7c136.3,0,246.7-110.4,246.7-246.7 S392.9,9.8,256.6,9.8z M347.1,353.6c-13.2,13.2-34.7,13.2-48,0l-65.2-65.2c-1.1-1.1-2.1-2.2-3-3.5c-5.1-5.9-8.2-13.7-8.2-22.2V112.1 c0-18.7,15.3-33.9,34-33.9c9.3,0,17.8,3.7,24,9.9c6,6.1,9.9,14.6,9.9,24v137.1l56.6,56.6C360.3,319,360.3,340.4,347.1,353.6z"
+            />
+          </svg>
+        </div>
+        <span id="timer"></span>
+      </div>
+      <div id="wordle-logo-container">
+        <svg 
+        id="wordle-logo"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 220.8 50"
+        style="enable-background:new 0 0 220.8 50;"
+        xml:space="preserve"
+      >
+        <style type="text/css">
+          .logo-fill {
+            fill: #e70909; /* Default color */
+          }
+        </style>
+        <path class="logo-fill" d="M79.2,13.1c-9.3,0-16.9,7.9-16.9,17.8c0,9.8,7.6,17.8,16.9,17.8c9.3,0,16.9-7.9,16.9-17.8
+        C96.1,21,88.6,13.1,79.2,13.1z M79.2,40c-4.8,0-8.7-4.1-8.7-9.2c0-5,3.9-9.2,8.7-9.2c4.8,0,8.7,4.1,8.7,9.2C87.9,35.9,84,40,79.2,40
+        z"/>
+      <path class="logo-fill" d="M158.5,28.7v3.8c0.1-0.6,0.1-1.2,0.1-1.9S158.5,29.4,158.5,28.7z"/>
+      <path class="logo-fill" d="M150.4,1.4v14c-2.5-1.6-5.5-2.5-8.7-2.5c-9.3,0-16.9,7.9-16.9,17.8c0,9.8,7.6,17.8,16.9,17.8
+        c3.2,0,6.2-0.9,8.7-2.5v2.5h8.1V1.4H150.4z M141.6,39.8c-4.8,0-8.7-4.1-8.7-9.2s3.9-9.2,8.7-9.2c4.8,0,8.7,4.1,8.7,9.2
+        S146.5,39.8,141.6,39.8z"/>
+      <rect x="165.2" y="1.4" class="logo-fill" width="8.1" height="46.9"/>
+      <path class="logo-fill" d="M203.7,34.4c-1.4,3.2-4.4,5.3-7.9,5.3c-0.7,0-1.4-0.1-2-0.3l15.8-19l0,0l0.1-0.1c-3.1-4.6-8.1-7.6-13.8-7.6
+        c-9.3,0-16.9,7.9-16.9,17.8c0,9.8,7.6,17.8,16.9,17.8c5.8,0,11-3.1,14-7.8L203.7,34.4z M187,30.6c0-5,3.9-9.2,8.7-9.2
+        c0.8,0,1.5,0.1,2.2,0.3l-10.3,12.4C187.3,33.1,187,31.9,187,30.6z"/>
+      <path class="logo-fill" d="M123.2,14.9v8.6h-8.6c-5.9,0-5.6,6-5.6,6v18.9h-8.5V29.5c0-15.4,14.1-14.6,14.1-14.6H123.2z"/>
+      <rect x="100.5" y="29.5" class="logo-fill" width="0" height="18.9"/>
+      <rect x="109" y="29.5" class="logo-fill" width="0" height="18.9"/>
+      <path class="logo-fill" d="M70.5,2.6L44.1,48.3v0.1L36,48.2l0.5-29L21.1,45.9c-0.9,1.6-2.6,2.6-4.4,2.6h-5.1V1.6h8.1v30.7L34.3,6.8
+        c1.6-2.7,4.5-4.4,7.6-4.3l3,0.1l-0.5,29L61.2,2.5L70.5,2.6z"/>
+        </svg>
+      </div>
+        <span id="points">
+        <div id="points-icon-container">
+          <svg
+            id="points-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 512 512"
+            style="enable-background:new 0 0 512 512;"
+            xml:space="preserve"
+          >
+            <style type="text/css">
+              .st0 {
+                fill: #212121; /* Default color */
+              }
+            </style>
+            <path
+              class="st0"
+              d="M278.4,29l55.5,112.4c5.6,11.4,16.4,19.2,29,21.1l124,18c20.1,2.9,28.1,27.6,13.6,41.8l-89.8,87.5 c-9.1,8.8-13.2,21.6-11.1,34.1l21.2,123.5c3.4,20-17.6,35.3-35.6,25.8l-111-58.3c-11.2-5.9-24.6-5.9-35.8,0l-111,58.3 c-18,9.5-39-5.8-35.6-25.8l21.2-123.5c2.1-12.5-2-25.2-11.1-34.1l-89.8-87.5c-14.5-14.2-6.5-38.9,13.6-41.8l124-18 c12.5-1.8,23.4-9.7,29-21.1L234.4,29C243.4,10.7,269.4,10.7,278.4,29z"
+            />
+          </svg>
+        </div>
+        <span id="points-value">0</span>
+      </span>
+      <span id="difficulty">Difficulty: Medium</span>
     </div>
-    <input id="guess-input" type="text" placeholder="Enter a word" />
-    <button id="submit-guess">Submit</button>
-    <p id="feedback"></p>
+    
+    <div id="title-container">
+    </div>
+    <div id="game-container">
+      <div id="board">
+      </div>
+    </div>
+    
+    <div id="virtual-keyboard-container">
+      <div id="virtual-keyboard">
+      </div>
+      <button id="submit-guess">Submit</button>
+    </div>
   </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
   <script src="script.js"></script>
-  <script src="gamelogic.js"></script>
+  <script src="scoreboard.js"></script>
+  <script src="ui-components.js"></script>
+
 </body>
 </html>

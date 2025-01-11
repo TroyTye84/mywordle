@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wordle Scoreboard</title>
+  <link rel="stylesheet" href="scoreboard.css"> <!-- Link to the new scoreboard styles -->
+</head>
+<body>
+  <div id="title-container">
+    <img src="img/wordle_logo.svg" alt="Wordle Challenge" id="title-image">
+    <h1>Scoreboard</h1>
+  </div>
+  <div id="scoreboard-container">
+    <div id="scoreboard-wrapper">
+      <table id="scoreboard">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Score</th>
+            <th>Difficulty</th>
+            <th>Word</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Rows dynamically generated -->
+        </tbody>
+      </table>
+    </div>
+    
+    <div id="share-button-container">
+      <button id="share-button">Challenge a friend</button>
+    </div>
+  </div>
+  
+  <!-- Include the game logic -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="scoreboard.js"></script>
+  <script src="supabase-init.js"></script>
+</body>
+</html>
